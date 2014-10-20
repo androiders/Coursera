@@ -1,0 +1,13 @@
+#!/bin/bash  
+mkdir IntentsLabSubmit  
+
+mkdir IntentsLabSubmit/IntentsLab  
+cp Intents/SourceFiles/Skeletons/IntentsLab/src/course/labs/intentslab/ActivityLoaderActivity.java IntentsLabSubmit/IntentsLab  
+cp Intents/SourceFiles/Skeletons/IntentsLab/src/course/labs/intentslab/ExplicitlyLoadedActivity.java IntentsLabSubmit/IntentsLab  
+
+mkdir IntentsLabSubmit/MyBrowser  
+cp Intents/SourceFiles/Skeletons/MyBrowser/AndroidManifest.xml IntentsLabSubmit/MyBrowser  
+
+zip -r IntentsLabSubmit.zip IntentsLabSubmit  
+rm -r IntentsLabSubmit
+

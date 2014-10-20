@@ -1,0 +1,10 @@
+#!/bin/bash  
+mkdir fragmentsLabSubmit  
+
+mkdir fragmentsLabSubmit/FragmentsLab  
+cp Fragments/SourceFiles/Skeletons/FragmentsLab/src/course/labs/fragmentslab/MainActivity.java fragmentsLabSubmit/FragmentsLab/
+  
+
+zip -r fragmentsLabSubmit.zip fragmentsLabSubmit  
+rm -r fragmentsLabSubmit
+

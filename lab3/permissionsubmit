@@ -1,0 +1,16 @@
+#!/bin/bash  
+mkdir permissionsLabSubmit  
+
+mkdir permissionsLabSubmit/Dangerous  
+cp Permissions/SourceFiles/Skeletons/DangerousApp/AndroidManifest.xml permissionsLabSubmit/Dangerous
+  
+
+mkdir permissionsLabSubmit/Permissions	  
+cp Permissions/SourceFiles/Skeletons/PermissionsLab/AndroidManifest.xml permissionsLabSubmit/Permissions
+
+cp Permissions/SourceFiles/Skeletons/PermissionsLab/src/course/labs/permissionslab/*.java permissionsLabSubmit/Permissions
+
+
+zip -r permissionsLabSubmit.zip permissionsLabSubmit  
+rm -r permissionsLabSubmit
+
