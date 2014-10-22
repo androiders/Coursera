@@ -86,14 +86,6 @@ public class ToDoItem {
 	public void setDate(Date date) {
 		mDate = date;
 	}
-
-	public void setDone(boolean done)
-	{
-		if(done)
-			mStatus = Status.DONE;
-		else
-			mStatus = Status.NOTDONE;
-	}
 	
 	
 	// Take a set of String data values and 

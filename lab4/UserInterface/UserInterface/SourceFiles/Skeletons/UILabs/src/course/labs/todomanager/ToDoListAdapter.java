@@ -3,7 +3,6 @@ package course.labs.todomanager;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -153,7 +152,9 @@ public class ToDoListAdapter extends BaseAdapter {
 				// TODO - set up an OnCheckedChangeListener, which
 				// is called when the user toggles the status checkbox
 				if(isChecked)
-					toDoItem.setDone(isChecked);
+					toDoItem.setStatus(ToDoItem.Status.DONE);
+				else
+					toDoItem.setStatus(ToDoItem.Status.NOTDONE);
 
 			}
 		});
