@@ -41,32 +41,30 @@ public class ToDoManagerActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 
 		// Create a new TodoListAdapter for this ListActivity's ListView
-//		mAdapter = new ToDoListAdapter(getApplicationContext());
+		mAdapter = new ToDoListAdapter(getApplicationContext());
 
 		// Put divider between ToDoItems and FooterView
 		getListView().setFooterDividersEnabled(true);
 
-		// TODO - Inflate footerView for footer_view.xml file
-
-//		TextView footerView = (TextView)getLayoutInflater().inflate(R.id.footerView, null);
+		//a view is _inflated_ from xmlfile!!!
+		View infView = getLayoutInflater().inflate(R.layout.footer_view, null);
+		//a specific child biew is gotten by findViewByid!!
+		TextView footerView = (TextView)infView.findViewById(R.id.footerView);
 
 		// NOTE: You can remove this block once you've implemented the assignment
-		// TODO - Add footerView to ListView
-//		getListView().addFooterView(footerView);
+		getListView().addFooterView(footerView);
 		
-//		footerView.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//
-//				Log.i(TAG,"Entered footerView.OnClickListener.onClick()");
-//
-//				//TODO - Implement OnClick().
-//			}
-//		});
+		footerView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
 
-		// TODO - Attach the adapter to this ListActivity's ListView
-//		getListView().setAdapter(mAdapter);
-		
+				Log.i(TAG,"Entered footerView.OnClickListener.onClick()");
+
+				//TODO - Implement OnClick().
+			}
+		});
+
+		getListView().setAdapter(mAdapter);
 	}
 
 	@Override
