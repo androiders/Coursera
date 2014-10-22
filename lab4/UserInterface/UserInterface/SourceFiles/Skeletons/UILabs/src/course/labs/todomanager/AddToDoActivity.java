@@ -95,6 +95,7 @@ public class AddToDoActivity extends Activity {
 
 				// TODO - Indicate result and finish
 				setResult(RESULT_CANCELED);
+				finish();
 
 			}
 		});
@@ -109,6 +110,7 @@ public class AddToDoActivity extends Activity {
 				// TODO - Reset data to default values
 				mDefaultPriorityButton.setChecked(true);
 				mDefaultStatusButton.setChecked(true);
+				mTitleText.setText("");
 				setDefaultDateTime();
 			}
 		});
@@ -124,7 +126,7 @@ public class AddToDoActivity extends Activity {
 				// gather ToDoItem data
 
 				// TODO - Get the current Priority
-				Priority priority = getPriority()
+				Priority priority = getPriority();
 
 				// TODO - Get the current Status
 				Status status = getStatus();
