@@ -1,0 +1,87 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    
+    <GridLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+	android:layout_marginBottom="30dp"
+    android:columnCount="2">
+    
+         <LinearLayout  
+            android:layout_row="0"
+            android:layout_column="0"
+ 	    	android:layout_width="wrap_content"
+    		android:layout_height="match_parent"
+    		android:layout_gravity="fill_horizontal"
+    		android:orientation="vertical">
+
+ 	    	<Button
+ 	    	    android:id="@+id/sq1"
+ 	    	    android:layout_width="match_parent"
+ 	    	    android:layout_height="0dp"
+ 	    	    android:layout_weight="1.00"
+ 	    	    android:layout_margin="3dp"
+ 	    	    android:text="@string/fake_string"
+ 	    		android:background="@color/red"
+ 	    	    android:textColor="@color/transparent"/>
+ 	    	     
+ 	    
+	 	    <Button
+	 	        android:id="@+id/sq2"
+    	    	android:layout_width="match_parent"
+        		android:layout_height="wrap_content"
+        		android:layout_weight="1"
+        		android:layout_margin="3dp"
+        		android:background="@color/green" />
+ 	    
+ 		</LinearLayout>   
+ 	
+ 		<LinearLayout  
+ 		    android:layout_row="0"
+            android:layout_column="1"
+ 	    	android:layout_width="wrap_content"
+    		android:layout_height="match_parent"
+    		android:layout_gravity="fill_horizontal"
+    		android:orientation="vertical">
+
+	 	    <Button
+	 	        android:id="@+id/sq3"
+	 	        android:layout_width="match_parent"
+	 	        android:layout_height="wrap_content"
+	 	        android:layout_weight="1"
+	 	        android:layout_margin="3dp"
+	 	        android:background="@color/pink"/>
+ 	    
+ 		    <Button
+ 		        android:id="@+id/sq4"
+    	    	android:layout_width="match_parent"
+        		android:layout_height="wrap_content"
+        		android:layout_weight="1" 
+        		android:layout_margin="3dp"
+        		android:background="@color/white"/>
+   		   	<Button
+   		   	    android:id="@+id/sq5"
+    	    	android:layout_width="match_parent"
+        		android:layout_height="wrap_content"
+        		android:layout_weight="1" 
+        		android:layout_margin="3dp"
+        		android:background="@color/yellow"/>
+ 
+ 		</LinearLayout>   
+        
+    </GridLayout>
+    
+	<SeekBar
+   		android:id="@+id/color_slider"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:max="100"/>
+    
+    
+</RelativeLayout>
