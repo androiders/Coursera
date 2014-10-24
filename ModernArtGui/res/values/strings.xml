@@ -5,5 +5,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="hejhej">Hej hej</string>
     <string name="fake_string">......................</string>
+    <string name="more_info">more information</string>
+    <string name="not_now">Not now</string>
+    <string name="visit_moma">Take me there!</string>
+    <string name="visit_moma_info">Learn more and go to MOMA website</string>
 
 </resources>
