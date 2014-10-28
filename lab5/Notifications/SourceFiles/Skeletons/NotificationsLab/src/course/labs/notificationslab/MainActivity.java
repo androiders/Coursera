@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.admin.DeviceAdminReceiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -89,10 +90,13 @@ public class MainActivity extends Activity implements SelectionListener {
 			// Show a Toast Notification to inform user that 
 			// the app is "Downloading Tweets from Network"
 			Log.i (TAG,"Issuing Toast Message");
+			Context context = getApplicationContext();
+			CharSequence text = "Downloading tweets from network";
+			int duration = Toast.LENGTH_LONG;
 
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.show();
 
-			
-			
 
 			new DownloaderTask(this).execute(URL_TSWIFT, URL_RBLACK, URL_LGAGA);
 
@@ -109,11 +113,9 @@ public class MainActivity extends Activity implements SelectionListener {
 					// Check to make sure this is an ordered broadcast
 					// Let sender know that the Intent was received
 					// by setting result code to MainActivity.IS_ALIVE
-
-					
-
-
-					
+					if(isOrderedBroadcast()){
+						setResultCode(MainActivity.IS_ALIVE);
+					}					
 				}
 			};
 
@@ -175,7 +177,6 @@ public class MainActivity extends Activity implements SelectionListener {
 		transaction.commit();
 		mFragmentManager.executePendingTransactions();
 		return feedFragment;
-
 	}
 
 	// Register the BroadcastReceiver
@@ -186,7 +187,7 @@ public class MainActivity extends Activity implements SelectionListener {
 		// TODO:
 		// Register the BroadcastReceiver to receive a 
 		// DATA_REFRESHED_ACTION broadcast
-
+		registerReceiver(mRefreshReceiver,new IntentFilter(DATA_REFRESHED_ACTION));
 		
 		
 		
@@ -199,10 +200,9 @@ public class MainActivity extends Activity implements SelectionListener {
 		// Unregister the BroadcastReceiver if it has been registered
         // Note: To work around a Robotium issue - check that the BroadcastReceiver
         // is not null before you try to unregister it
-        
-
-		
-		
+		if(mRefreshReceiver != null){
+			unregisterReceiver(mRefreshReceiver);
+		}
 		
 		super.onPause();
 

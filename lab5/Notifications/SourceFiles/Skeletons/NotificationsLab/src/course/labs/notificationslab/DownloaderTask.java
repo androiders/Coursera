@@ -153,18 +153,17 @@ public class DownloaderTask extends AsyncTask<String, Void, String[]> {
 								"Entered result receiver's onReceive() method");
 
 						// TODO: Check whether the result code is not MainActivity.IS_ALIVE
+						int result = getResultCode();
 
-						if (false || true) {
+						if (result != MainActivity.IS_ALIVE) {
 
 							// TODO: If so, create a PendingIntent using the
 							// restartMainActivityIntent and set its flags
 							// to FLAG_UPDATE_CURRENT
-
-
-
+							
+							PendingIntent pending = PendingIntent.getActivity(mApplicationContext,1, restartMainActivtyIntent,PendingIntent.FLAG_UPDATE_CURRENT);
 							
 							
-
 							// Uses R.layout.custom_notification for the
 							// layout of the notification View. The xml
 							// file is in res/layout/custom_notification.xml
@@ -176,10 +175,10 @@ public class DownloaderTask extends AsyncTask<String, Void, String[]> {
 							// TODO: Set the notification View's text to
 							// reflect whether the download completed
 							// successfully
-
-
-
-							
+							if(success)
+								mContentView.setTextViewText(R.id.text, successMsg);
+							else
+								mContentView.setTextViewText(R.id.text, failMsg);
 
 							// TODO: Use the Notification.Builder class to
 							// create the Notification. You will have to set
@@ -187,18 +186,12 @@ public class DownloaderTask extends AsyncTask<String, Void, String[]> {
 							// android.R.drawable.stat_sys_warning
 							// for the small icon. You should also
 							// setAutoCancel(true).
-
-
-
-							
-							
-							
-							
+							Notification noti = new Notification.Builder(mApplicationContext).setContent(mContentView).setSmallIcon(android.R.drawable.stat_sys_warning).setContentTitle("Info").setContentIntent(pending).setAutoCancel(true).build();
+				
 							// TODO: Send the notification
+							NotificationManager nmgr = (NotificationManager) mApplicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
+							nmgr.notify(MY_NOTIFICATION_ID, noti);
 
-
-							
-							
 
 							Log.i(TAG, "Notification Area Notification sent");
 						}
