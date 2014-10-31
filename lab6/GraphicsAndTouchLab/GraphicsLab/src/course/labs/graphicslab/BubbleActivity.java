@@ -136,6 +136,8 @@ public class BubbleActivity extends Activity {
 			public boolean onFling(MotionEvent event1, MotionEvent event2,
 					float velocityX, float velocityY) {
 
+				Log.i(TAG,"onFLing()");
+				
 				// TODO - Implement onFling actions.
 				// You can get all Views in mFrame one at a time
 				// using the ViewGroup.getChildAt() method
@@ -165,27 +167,28 @@ public class BubbleActivity extends Activity {
 			@Override
 			public boolean onSingleTapConfirmed(MotionEvent event) {
 
+				Log.i(TAG,"onSingleTapConfirmed()");
+				
 				// TODO - Implement onSingleTapConfirmed actions.
 				// You can get all Views in mFrame using the
 				// ViewGroup.getChildCount() method
-				BubbleView b = null;
 				boolean intersect = false;
 				for(int c = 0; c < mFrame.getChildCount(); ++c)
 				{
-					b = (BubbleView)mFrame.getChildAt(c);
-					if(b != null) {
-						intersect |= b.intersects(event.getX(), event.getY()); 
+					BubbleView tmp = (BubbleView)mFrame.getChildAt(c);
+					if(tmp != null) {
+						intersect |= tmp.intersects(event.getX(), event.getY());
+						if(intersect)
+							tmp.stopMovement(true);
 					}
 				}
 				
 				
-				if(intersect) {//pop a bubble
-					b.stopMovement(true);
-					
-				}
-				else{//create a new 
+				if(!intersect){//create a new 
+					Log.i(TAG,"Create new Bubble!");
 					BubbleView bv = new BubbleView(getBaseContext(), event.getX(), event.getY());
 					bv.startMovement();
+					mFrame.addView(bv);
 				}
 				
 				return true;
@@ -197,8 +200,8 @@ public class BubbleActivity extends Activity {
 	public boolean onTouchEvent(MotionEvent event) {
 
 		Log.i(TAG, "onTouchEvent entered");
-		return mGestureDetector.onTouchEvent(event);
-	
+		mGestureDetector.onTouchEvent(event);
+		return true;
 	}
 
 	@Override
@@ -303,7 +306,7 @@ public class BubbleActivity extends Activity {
 			} else {
 
 				// TODO - set scaled bitmap size in range [1..3] * BITMAP_SIZE
-				mScaledBitmapWidth = BITMAP_SIZE * r.nextInt(3) +1;
+				mScaledBitmapWidth = BITMAP_SIZE * (r.nextInt(3) +1);
 			
 				
 			}
@@ -327,7 +330,7 @@ public class BubbleActivity extends Activity {
 			mMoverFuture = executor.scheduleWithFixedDelay(new Runnable() {
 				@Override
 				public void run() {
-
+					//Log.i(TAG,"in bubble thread");
 					// implement movement logic.
 					// Each time this method is run the BubbleView should
 					// move one step. If the BubbleView exits the display,
@@ -336,7 +339,7 @@ public class BubbleActivity extends Activity {
 					if(moveWhileOnScreen())
 						stopMovement(false);
 					else
-						invalidate();
+						postInvalidate();
 					
 				}
 			}, 0, REFRESH_RATE, TimeUnit.MILLISECONDS);
@@ -345,9 +348,10 @@ public class BubbleActivity extends Activity {
 		// Returns true if the BubbleView intersects position (x,y)
 		private synchronized boolean intersects(float x, float y) {
 
-			float dx = x - mXPos;
-			float dy = y - mYPos;
-			return (dx * dx + dy *dy) < mRadiusSquared;
+			Log.i(TAG,"In intersect (" + x + "," + y + ") (" + mXPos + mRadius + "," + mYPos + mRadius + ") : " + mRadius);
+			float dx = x - (mXPos + mRadius);
+			float dy = y - (mYPos + mRadius);
+			return dx * dx + dy * dy < mRadiusSquared;
 		}
 
 		// Cancel the Bubble's movement
@@ -356,6 +360,7 @@ public class BubbleActivity extends Activity {
 
 		private void stopMovement(final boolean wasPopped) {
 
+			Log.i(TAG,"Bubble stopped");
 			if (null != mMoverFuture) {
 
 				if (!mMoverFuture.isDone()) {
@@ -392,6 +397,7 @@ public class BubbleActivity extends Activity {
 		@Override
 		protected synchronized void onDraw(Canvas canvas) {
 
+//			Log.i(TAG,"onDraw in Bubbleview");
 			// TODO - save the canvas
 			canvas.save();
 
@@ -405,10 +411,12 @@ public class BubbleActivity extends Activity {
 			// Hint - Rotate around the bubble's center, not its position
 			canvas.rotate(mRotate, mXPos, mYPos);
 
+			canvas.translate(mXPos, mYPos);
 			
 			// TODO - draw the bitmap at it's new location
-			mPainter.setAntiAlias(true);
-			canvas.drawBitmap(mScaledBitmap, getX(),getY(),null);
+			//mPainter.setAntiAlias(true);
+			//canvas.drawBitmap(mScaledBitmap, mXPos-mRadius,mYPos-mRadius,null);
+			canvas.drawBitmap(mScaledBitmap, 0,0,null);
 
 			
 			// TODO - restore the canvas
@@ -427,10 +435,6 @@ public class BubbleActivity extends Activity {
 			mXPos += mDx;
 			mYPos += mDy;
 
-			setX(mXPos - mRadius);
-			setY(mYPos + mRadius);
-			
-			
 			return isOutOfView();
 
 		}
@@ -441,13 +445,13 @@ public class BubbleActivity extends Activity {
 
 			// TODO - Return true if the BubbleView is still on the screen after
 			// the move operation
-			if(getX() < -mScaledBitmapWidth)
+			if(mXPos < -mRadius)
 				return true;
-			if(getX() > mDisplayWidth)
+			if(mXPos > mDisplayWidth + mRadius)
 				return true;
-			if(getY() < 0)
+			if(mYPos < -mRadius)
 				return true;
-			if(getY() > mDisplayHeight + mScaledBitmapWidth)
+			if(mYPos > mDisplayHeight + mRadius)
 				return true;
 						
 			return false;
