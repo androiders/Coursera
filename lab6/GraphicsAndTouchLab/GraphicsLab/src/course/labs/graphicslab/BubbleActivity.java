@@ -12,9 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.PointF;
-import android.graphics.Rect;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
@@ -173,18 +170,21 @@ public class BubbleActivity extends Activity {
 				// You can get all Views in mFrame using the
 				// ViewGroup.getChildCount() method
 				boolean intersect = false;
+				boolean createNew = true;
+				BubbleView b = null;
 				for(int c = 0; c < mFrame.getChildCount(); ++c)
 				{
 					BubbleView tmp = (BubbleView)mFrame.getChildAt(c);
 					if(tmp != null) {
-						intersect |= tmp.intersects(event.getX(), event.getY());
-						if(intersect)
+						intersect = tmp.intersects(event.getX(), event.getY());
+						if(intersect){
 							tmp.stopMovement(true);
+							createNew = false;
+						}
 					}
 				}
 				
-				
-				if(!intersect){//create a new 
+				if(createNew){//create a new 
 					Log.i(TAG,"Create new Bubble!");
 					BubbleView bv = new BubbleView(getBaseContext(), event.getX(), event.getY());
 					bv.startMovement();
@@ -402,21 +402,26 @@ public class BubbleActivity extends Activity {
 			canvas.save();
 
 			
+
+
 			// TODO - increase the rotation of the original image by mDRotate
 			mRotate += mDRotate;
-
-
 			
 			// TODO Rotate the canvas by current rotation
 			// Hint - Rotate around the bubble's center, not its position
-			canvas.rotate(mRotate, mXPos, mYPos);
+//			canvas.translate(-mXPos, -mYPos);
 
-			canvas.translate(mXPos, mYPos);
+			canvas.rotate(mRotate, mXPos + mRadius, mYPos + mRadius);
+//			canvas.rotate(mRotate, 0, 0);
+			
+//			canvas.translate(mXPos, mYPos);
+
+			
 			
 			// TODO - draw the bitmap at it's new location
 			//mPainter.setAntiAlias(true);
-			//canvas.drawBitmap(mScaledBitmap, mXPos-mRadius,mYPos-mRadius,null);
-			canvas.drawBitmap(mScaledBitmap, 0,0,null);
+			canvas.drawBitmap(mScaledBitmap, mXPos,mYPos,null);
+			//canvas.drawBitmap(mScaledBitmap, 0,0,null);
 
 			
 			// TODO - restore the canvas
@@ -445,13 +450,13 @@ public class BubbleActivity extends Activity {
 
 			// TODO - Return true if the BubbleView is still on the screen after
 			// the move operation
-			if(mXPos < -mRadius)
+			if(mXPos < - mScaledBitmapWidth)
 				return true;
-			if(mXPos > mDisplayWidth + mRadius)
+			if(mXPos > mDisplayWidth + mScaledBitmapWidth)
 				return true;
-			if(mYPos < -mRadius)
+			if(mYPos < - mScaledBitmapWidth)
 				return true;
-			if(mYPos > mDisplayHeight + mRadius)
+			if(mYPos > mDisplayHeight + mScaledBitmapWidth)
 				return true;
 						
 			return false;
