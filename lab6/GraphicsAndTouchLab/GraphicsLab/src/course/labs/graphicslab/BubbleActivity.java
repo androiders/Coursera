@@ -93,9 +93,7 @@ public class BubbleActivity extends Activity {
 			
 			@Override
 			public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-				if(status == 0)
-					setupGestureDetector();
-				
+				setupGestureDetector();
 			}
 		});
 		
