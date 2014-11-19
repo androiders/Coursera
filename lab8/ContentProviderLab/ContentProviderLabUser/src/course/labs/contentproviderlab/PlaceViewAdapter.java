@@ -16,6 +16,7 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,15 +63,27 @@ public class PlaceViewAdapter extends CursorAdapter {
 		// getPlaceRecordFromCursor() method as you add the
 		// cursor's places to the list
 
-		removeAllViews();
 		
-		while(newCursor != null && !newCursor.isLast())
-		{
-			add(getPlaceRecordFromCursor(newCursor));
-			newCursor.moveToNext();
+		
+		
+		
+		
+		//Log.i("BAH","new cursor count: " + newCursor.getCount());
+		
+		if(newCursor.getCount() > 0)
+		{		
+			removeAllViews();
+			newCursor.moveToFirst();
+			while(newCursor != null && !newCursor.isLast())
+			{
+				Log.i("BAH","Adding place");
+				add(getPlaceRecordFromCursor(newCursor));
+				newCursor.moveToNext();
+			}
 		}
-			
-        newCursor.moveToFirst();
+		
+//        newCursor.moveToFirst();
+        notifyDataSetChanged();
         return super.swapCursor(newCursor);
 	}
 
@@ -134,8 +147,8 @@ public class PlaceViewAdapter extends CursorAdapter {
 		if (storeBitmapToFile(listItem.getFlagBitmap(), filePath)) {
 
 			listItem.setFlagBitmapPath(filePath);
-			mPlaceRecords.add(listItem);
-
+			
+			
 			ContentValues values = new ContentValues();
 			values.put(PlaceBadgesContract.COUNTRY_NAME, listItem.getCountryName());
 			values.put(PlaceBadgesContract.PLACE_NAME, listItem.getPlace());
@@ -146,7 +159,10 @@ public class PlaceViewAdapter extends CursorAdapter {
 			
 			// TODO - Insert new record into the ContentProvider
 			mContext.getContentResolver().insert(PlaceBadgesContract.CONTENT_URI, values);
-        
+			
+			mPlaceRecords.add(listItem);
+			
+			
         }
 
 	}

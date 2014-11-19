@@ -30,7 +30,7 @@ public class PlaceViewActivity extends ListActivity implements
 	private static String TAG = "Lab-ContentProvider";
 
 	// False if you don't have network access
-	public static boolean sHasNetwork = false;
+	public static boolean sHasNetwork = true;
 
 	private boolean mMockLocationOn = false;
 
@@ -67,7 +67,6 @@ public class PlaceViewActivity extends ListActivity implements
 
 		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		
-
 		// TODO - add a footerView to the ListView
 		// You can use footer_view.xml to define the footer
 		
@@ -120,7 +119,7 @@ public class PlaceViewActivity extends ListActivity implements
 //		ContentResolver cr = getApplicationContext().getContentResolver();
 //		Cursor c = cr.query(PlaceBadgesContract.BASE_URI, null,null, null, null);
 		mCursorAdapter =  new PlaceViewAdapter(getBaseContext(),null,0);
-		setListAdapter(mCursorAdapter);
+		getListView().setAdapter(mCursorAdapter);
 
 		// TODO - Initialize the loader
 		getLoaderManager().initLoader(0, null, this);
@@ -169,7 +168,7 @@ public class PlaceViewActivity extends ListActivity implements
 
 		// TODO - Attempt to add place to the adapter, considering the following cases
 
-		
+		Log.i(TAG,"addNewPlace called");
 		// The place is null - issue a Toast message with the text
 		// "PlaceBadge could not be acquired"
 		// Do not add the PlaceBadge to the adapter
@@ -198,6 +197,7 @@ public class PlaceViewActivity extends ListActivity implements
 		
 		
 		// Otherwise - add the PlaceBadge to the adapter
+		Log.i(TAG,"calling mCursorAdapter.add");
 		mCursorAdapter.add(place);
 
 		
@@ -251,9 +251,17 @@ public class PlaceViewActivity extends ListActivity implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 
-		String select = "*";
+		String[] projection = {
+				PlaceBadgesContract._ID,
+				PlaceBadgesContract.FLAG_BITMAP_PATH,
+				PlaceBadgesContract.COUNTRY_NAME,
+				PlaceBadgesContract.PLACE_NAME,
+				PlaceBadgesContract.LAT,
+				PlaceBadgesContract.LON 
+				};
+		String select = "((" +  PlaceBadgesContract._ID + " NOT NULL))";
 		
-		CursorLoader cl = new CursorLoader(this, PlaceBadgesContract.CONTENT_URI,null,select,null,null);
+		CursorLoader cl = new CursorLoader(this, PlaceBadgesContract.CONTENT_URI,projection,select,null,null);
 		// TODO - Create a new CursorLoader and return it
 		return cl;
 	}
