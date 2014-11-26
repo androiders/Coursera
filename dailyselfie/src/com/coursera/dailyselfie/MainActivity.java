@@ -4,7 +4,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.net.Uri;
@@ -14,26 +13,31 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ListActivity {
 
 	private static String SELFIE_STR = "_selfie_";
 	private int CAMERA_REQUEST_CODE = 1;
 	private Uri selfieUri;
 	private Intent camIntent;
-	ListView selfieList;
+//	ListView selfieList;
+	
+	SelfieViewAdapter mViewAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+//		setContentView(R.layout.activity_main);
 		
-		selfieList = (ListView) findViewById(R.id.selfieList);
-		
+//		selfieList = (ListView) findViewById(R.id.selfieList);
+		//selfieList = getListView();
 		
 		camIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		
+		mViewAdapter = new SelfieViewAdapter(this);
+		
+		setListAdapter(mViewAdapter);
 	}
 
 	@Override
@@ -99,7 +103,8 @@ public class MainActivity extends Activity {
 		{
 			if(resultCode == RESULT_OK)
 			{
-				Toast.makeText(this, "Picture saved in:\n" + selfieUri, Toast.LENGTH_LONG).show();
+				Toast.makeText(this, "MOHAHAHAH", Toast.LENGTH_LONG).show();
+				mViewAdapter.add(selfieUri);
 			}
 			if(resultCode == RESULT_CANCELED)
 			{

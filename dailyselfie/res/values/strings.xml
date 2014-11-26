@@ -4,5 +4,6 @@
     <string name="app_name">DailySelfie</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_camera">Camera</string>
+    <string name="imagedesc">selfie</string>
 
 </resources>
