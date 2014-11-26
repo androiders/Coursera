@@ -73,10 +73,10 @@ public class PlaceViewActivity extends ListActivity implements LocationListener,
 		
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 	    .permitAll().build();
-	StrictMode.setThreadPolicy(policy);
-	mSensorManager = SensorManagerSimulator.getSystemService(this,
-	    SENSOR_SERVICE);
-	mSensorManager.connectSimulator();
+		StrictMode.setThreadPolicy(policy);
+		mSensorManager = SensorManagerSimulator.getSystemService(this,
+				SSENSOR_SERVICE);
+		mSensorManager.connectSimulator();
          //mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		
 		// TODO - add a footerView to the ListView
