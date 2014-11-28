@@ -48,9 +48,9 @@ public class SelfieViewAdapter extends BaseAdapter {
 	//context....
 	private Context mContext;
 
-//	private String ASK_DELETE = "Really delete this selfie?";
-//	private String NO = "No!";
-//	private String OK = "Yes";
+	private String ASK_DELETE = "Really delete this selfie?";
+	private String NO = "No!";
+	private String OK = "Yes";
 //
 //	private AlertDialog mAlertDialog;
 	
@@ -140,15 +140,28 @@ public class SelfieViewAdapter extends BaseAdapter {
 			int lPos = pos;
 			@Override
 			public boolean onLongClick(View v) {
-//				mAlertDialog.show();
-				//Here we delete the selfie without hesitation adn without asking the user! Great UI indeed :P
-				SelfieInfo si = (SelfieInfo) SelfieViewAdapter.this.getItem(lPos);
-				if( si.deleteFile()){
-					SelfieViewAdapter.this.remove(si);
-				}
-				else{
-					Toast.makeText(mContext, "Could not delete file",Toast.LENGTH_SHORT).show();
-				}
+				
+				//On long click we display i dialog to the user asking if he or she wants
+				//to delete the clicked image
+				AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		    	builder.setTitle("Confirm")
+		    		.setMessage(ASK_DELETE)
+		    		.setIcon(android.R.drawable.ic_dialog_alert)
+		    		.setPositiveButton(OK, new DialogInterface.OnClickListener() {
+		    	    public void onClick(DialogInterface dialog, int which) {			      	
+		    	    	//Yes button clicked, do something
+						SelfieInfo si = (SelfieInfo) SelfieViewAdapter.this.getItem(lPos);
+						if( si.deleteFile()){
+							SelfieViewAdapter.this.remove(si);
+						}
+						else{
+							Toast.makeText(mContext, "Could not delete file",Toast.LENGTH_SHORT).show();
+						}
+		    	    }
+		    	})
+		    	.setNegativeButton(NO, null)//Do nothing on no
+		    	.show();
+			
 				return true;
 			}
 		});
@@ -198,22 +211,4 @@ public class SelfieViewAdapter extends BaseAdapter {
 	    Bitmap bitmap = BitmapFactory.decodeFile(photoPath.getPath(), bmOptions);
 	    imageView.setImageBitmap(bitmap);
 	}
-	
-//	private void createLongClickDialog() {
-//		  // Use the Builder class for convenient dialog construction
-//        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-//        builder.setMessage(ASK_DELETE)
-//               .setPositiveButton(OK, new DialogInterface.OnClickListener() {
-//                   public void onClick(DialogInterface dialog, int id) {
-//                       
-//                   }
-//               })
-//               .setNegativeButton(NO, new DialogInterface.OnClickListener() {
-//                   public void onClick(DialogInterface dialog, int id) {
-//                       // User cancelled the dialog
-//                   }
-//               });
-//        // Create the AlertDialog object and return it
-//        mAlertDialog = builder.create();
-//    }
 }
