@@ -30,6 +30,9 @@
         android:name="com.coursera.dailyselfie.SelfieViewActivity"
         android:parentActivityName=".MainActivity" >
     </activity>
+    <receiver android:name=".AlarmReceiver" >
+        </receiver>
+          
     </application>
 
 </manifest>

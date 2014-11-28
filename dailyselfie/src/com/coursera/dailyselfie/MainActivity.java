@@ -1,38 +1,34 @@
 package com.coursera.dailyselfie;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import android.app.AlarmManager;
 import android.app.ListActivity;
+import android.app.PendingIntent;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+
+/**
+ * Main activity for the daily selfi application.
+ * @author androiders
+ *
+ */
 public class MainActivity extends ListActivity {
 
-	private static String SELFIE_STR = "_selfie_";
 	private int CAMERA_REQUEST_CODE = 1;
-	private Uri selfieUri;
+	private SelfieInfo mCurrSelfie;
 	private Intent camIntent;
-//	ListView selfieList;
 	
 	SelfieViewAdapter mViewAdapter;
+	private long ALARM_PERIOD = 2 * 60 * 1000; //2 minutes in ms for testing...
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_main);
-		
-//		selfieList = (ListView) findViewById(R.id.selfieList);
-		//selfieList = getListView();
-		
 		camIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		
 		mViewAdapter = new SelfieViewAdapter(this);
@@ -54,62 +50,51 @@ public class MainActivity extends ListActivity {
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_camera) {
-			selfieUri = getOutputMediaFileUri(); // create a file to save the image
-			camIntent.putExtra(MediaStore.EXTRA_OUTPUT, selfieUri); // set the image file name
+			mCurrSelfie = new SelfieInfo();
+			camIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCurrSelfie.getUri()); // set the image file name
 		    startActivityForResult(camIntent, CAMERA_REQUEST_CODE );
 			//return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
-
 	
-	/** Create a file Uri for saving an image or video */
-	private static Uri getOutputMediaFileUri(){
-	      return Uri.fromFile(getOutputMediaFile());
-	}
-
-	/** Create a File for saving an image or video */
-	private static File getOutputMediaFile(){
+	@Override
+	protected void onStop() {
+		super.onStop();
+		//Schedule the alarm when the user quits the application or it is no longer visible
+		//should probably check to see if it is already scheduled to acount for lifecycle methods
+		//and also cancel it if the user starts the app before alarm is fired
+		scheduleAlarm();
 		
-	    // To be safe, you should check that the SDCard is mounted
-	    // using Environment.getExternalStorageState() before doing this.
-
-	    File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-	              Environment.DIRECTORY_PICTURES), "MyCameraApp");
-	    // This location works best if you want the created images to be shared
-	    // between applications and persist after your app has been uninstalled.
-
-	    // Create the storage directory if it does not exist
-	    if (! mediaStorageDir.exists()){
-	        if (! mediaStorageDir.mkdirs()){
-	            Log.d("MyCameraApp", "failed to create directory");
-	            return null;
-	        }
-	    }
-	    
-	 // Create a media file name
-	    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-	    File mediaFile;
-	    mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-	    		SELFIE_STR  + timeStamp + ".jpg");
-	    
-	    return mediaFile;
 	}
-	
+
 	public void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
 		if(requestCode == CAMERA_REQUEST_CODE)
 		{
 			if(resultCode == RESULT_OK)
 			{
-				Toast.makeText(this, "MOHAHAHAH", Toast.LENGTH_LONG).show();
-				mViewAdapter.add(selfieUri);
+				mViewAdapter.add(mCurrSelfie);
 			}
 			if(resultCode == RESULT_CANCELED)
 			{
-				//do styff
+				//do stuff??
 			}
 		}
+	}
+	
+	/**
+	 * Scedules the alarm.
+	 */
+	private void scheduleAlarm() {
+		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+	    Intent broadcast_intent = new Intent(MainActivity.this, AlarmReceiver.class);
+	    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,  broadcast_intent, 0);
+
+
+	    alarmManager.set(AlarmManager.ELAPSED_REALTIME,  SystemClock.elapsedRealtime() + ALARM_PERIOD , pendingIntent);
+	    Log.i("TAG","Alarm scheduled");
 	}
 }
