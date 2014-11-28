@@ -11,7 +11,7 @@ import android.os.SystemClock;
 import android.util.Log;
 
 /**
- * Handles scheduling of alarms and receiving of broadcasted events
+ * Handles scheduling and canceling of alarms and receiving of broadcasted events
  * @author anfol1
  *
  */
