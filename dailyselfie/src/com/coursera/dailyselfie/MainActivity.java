@@ -1,13 +1,10 @@
 package com.coursera.dailyselfie;
 
-import android.app.AlarmManager;
+
 import android.app.ListActivity;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -23,8 +20,10 @@ public class MainActivity extends ListActivity {
 	private SelfieInfo mCurrSelfie;
 	private Intent camIntent;
 	
+	//handler for the alarm and broadcast manager
+	private SelfieAlarmHandler mAlarmHandler;
+	
 	SelfieViewAdapter mViewAdapter;
-	private long ALARM_PERIOD = 2 * 60 * 1000; //2 minutes in ms for testing...
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +31,18 @@ public class MainActivity extends ListActivity {
 		camIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		
 		mViewAdapter = new SelfieViewAdapter(this);
+		mAlarmHandler = new SelfieAlarmHandler();
 		
 		setListAdapter(mViewAdapter);
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		//Don't show alarms while we are in the application :)
+		mAlarmHandler.cancelAlarm(this);
+	};
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -65,7 +72,7 @@ public class MainActivity extends ListActivity {
 		//Schedule the alarm when the user quits the application or it is no longer visible
 		//should probably check to see if it is already scheduled to acount for lifecycle methods
 		//and also cancel it if the user starts the app before alarm is fired
-		scheduleAlarm();
+		mAlarmHandler.scheduleAlarm(this);
 		
 	}
 
@@ -82,19 +89,5 @@ public class MainActivity extends ListActivity {
 				//do stuff??
 			}
 		}
-	}
-	
-	/**
-	 * Scedules the alarm.
-	 */
-	private void scheduleAlarm() {
-		AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-	    Intent broadcast_intent = new Intent(MainActivity.this, AlarmReceiver.class);
-	    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,  broadcast_intent, 0);
-
-
-	    alarmManager.set(AlarmManager.ELAPSED_REALTIME,  SystemClock.elapsedRealtime() + ALARM_PERIOD , pendingIntent);
-	    Log.i("TAG","Alarm scheduled");
 	}
 }
