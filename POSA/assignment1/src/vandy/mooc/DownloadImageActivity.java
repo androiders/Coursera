@@ -26,18 +26,45 @@ public class DownloadImageActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         // Always call super class for necessary
         // initialization/implementation.
-        // @@ TODO -- you fill in here.
+    	super.onCreate(savedInstanceState);
 
         // Get the URL associated with the Intent data.
-        // @@ TODO -- you fill in here.
+    	final Uri uri = getIntent().getData();
+    	
 
         // Download the image in the background, create an Intent that
         // contains the path to the image file, and set this as the
         // result of the Activity.
 
-        // @@ TODO -- you fill in here using the Android "HaMeR"
-        // concurrency framework.  Note that the finish() method
-        // should be called in the UI thread, whereas the other
-        // methods should be called in the background thread.
+    	Thread imageThread = new Thread(){
+    		public void run(){
+    			//download the image in this thread
+    			final Uri img = DownloadUtils.downloadImage(DownloadImageActivity.this, uri);
+
+    			//create a runnable that we can post to the ui thread using runOnUiThread below
+    			Runnable uiRunnable = new Runnable(){
+    				public void run(){
+    					//create the intent result
+    	    	    	Intent result = new Intent();
+    	    	    	
+    	    	    	//if the dl failed return something that is not OK
+    	    	    	if(img == null || img.toString().isEmpty())
+    	    	    		setResult(RESULT_CANCELED);
+    	    	    	else{
+    	    	    	//if dl was OK, set the data and return OK
+    	    	    	result.setData(img);
+    	    	    	setResult(RESULT_OK, result);
+    	    	    	}
+    	    	    	//signal finish for this intent
+    	    	    	finish();
+    				}
+    			};
+    			//when the thread finishes the download, the runnable will be posted to the ui thread and execute the finish()
+    			runOnUiThread(uiRunnable);
+
+    		}
+    	};
+    	//start the thread and go :)
+    	imageThread.start();
     }
 }
