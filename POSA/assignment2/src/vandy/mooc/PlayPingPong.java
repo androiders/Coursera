@@ -95,6 +95,10 @@ public class PlayPingPong implements Runnable {
                 e.printStackTrace();
             }
 
+            //if we are not PING just return
+            if(mMyType == PingPong.PONG)
+            	return;
+            
             // Start the PING_THREAD first by (1) creating a Message
             // where the PING Handler is the "target" and the PONG
             // Handler is the "obj" to use for the reply and (2)
