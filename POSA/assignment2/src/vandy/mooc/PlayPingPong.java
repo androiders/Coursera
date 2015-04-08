@@ -127,6 +127,7 @@ public class PlayPingPong implements Runnable {
             	// Shutdown the HandlerThread so the main PingPong
                 // thread can join with it.
             	quitSafely();
+            	return false;
             }
 
             // Create a Message that contains the Handler as the
