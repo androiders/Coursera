@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 /**
  * @class PlayPingPong
@@ -15,7 +16,10 @@ import android.os.Message;
  *        respectively, on the display.
  */
 public class PlayPingPong implements Runnable {
-    /**
+    
+	private final String TAG = this.getClass().getName();
+	
+	/**
      * Keep track of whether a Thread is printing "ping" or "pong".
      */
     private enum PingPong {
@@ -89,8 +93,8 @@ public class PlayPingPong implements Runnable {
         	
             try {
                 // Wait for both Threads to initialize their Handlers.
-                mBarrier.await();
-               
+            	mBarrier.await();                
+                
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -118,19 +122,43 @@ public class PlayPingPong implements Runnable {
          * Hook method called back by HandlerThread to perform the
          * ping-pong protocol concurrently.
          */
-        @Override
         public boolean handleMessage(Message reqMsg) {
             // Print the appropriate string if this thread isn't done
             // with all its iterations yet.
             // @@ TODO - you fill in here, replacing "true" with the
             // appropriate code.
             if (mIterationsCompleted < mMaxIterations) {
+
             	mOutputStrategy.print(mMyType.toString());
             	mIterationsCompleted++;
+            	
             } else {
+            	
+            	Log.i(TAG, "Thread " + mMyType.toString() + " shutting down");
             	// Shutdown the HandlerThread so the main PingPong
                 // thread can join with it.
-            	quitSafely();
+            	
+            	//it this is true, we are NOT the last thread. So we can send a shutdown 
+            	//message to the other thread
+            	//this construct is unnecessarily generic but will probably work for more than 2 threads
+            	if(mBarrier.getNumberWaiting() < mBarrier.getParties()-1)
+            	{
+            		//just send a message so the other thread will enter its handleMessage(...) method
+            		//for one last iteration and finish
+            		 Handler newTarget = (Handler)reqMsg.obj;
+                     Message msg = newTarget.obtainMessage();
+                     msg.setTarget(newTarget);
+                     msg.sendToTarget();
+            	}
+            		
+            	//we wait for all threads to finish their message passing
+            	try{
+            		mBarrier.await();
+            	}catch(Exception e){
+            		 e.printStackTrace();
+            	}
+            	
+            	Looper.myLooper().quit();
             	return false;
             }
 
