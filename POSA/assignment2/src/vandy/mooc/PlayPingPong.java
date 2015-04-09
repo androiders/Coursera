@@ -129,7 +129,7 @@ public class PlayPingPong implements Runnable {
             // appropriate code.
             if (mIterationsCompleted < mMaxIterations) {
 
-            	mOutputStrategy.print(mMyType.toString());
+            	mOutputStrategy.print("\n" + mMyType.toString() + "(" + String.valueOf(mIterationsCompleted) + ")");
             	mIterationsCompleted++;
             	
             } else {
@@ -137,28 +137,14 @@ public class PlayPingPong implements Runnable {
             	Log.i(TAG, "Thread " + mMyType.toString() + " shutting down");
             	// Shutdown the HandlerThread so the main PingPong
                 // thread can join with it.
-            	
-            	//it this is true, we are NOT the last thread. So we can send a shutdown 
-            	//message to the other thread
-            	//this construct is unnecessarily generic but will probably work for more than 2 threads
-            	if(mBarrier.getNumberWaiting() < mBarrier.getParties()-1)
-            	{
-            		//just send a message so the other thread will enter its handleMessage(...) method
-            		//for one last iteration and finish
-            		 Handler newTarget = (Handler)reqMsg.obj;
-                     Message msg = newTarget.obtainMessage();
-                     msg.setTarget(newTarget);
-                     msg.sendToTarget();
-            	}
-            		
-            	//we wait for all threads to finish their message passing
-            	try{
-            		mBarrier.await();
-            	}catch(Exception e){
-            		 e.printStackTrace();
-            	}
+
+            	Handler newTarget = (Handler)reqMsg.obj;
+            	if(newTarget != null && newTarget.getLooper().getThread().isAlive())
+            		newTarget.getLooper().quit();
             	
             	Looper.myLooper().quit();
+            	//just prettify the screen print :)
+            	mOutputStrategy.print("\n");
             	return false;
             }
 
