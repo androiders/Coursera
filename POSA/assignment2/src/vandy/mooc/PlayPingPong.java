@@ -40,6 +40,7 @@ public class PlayPingPong implements Runnable {
      * Define a pair of Handlers used to send/handle Messages via the
      * HandlerThreads.
      */
+    // @@ TODO - you fill in here.
     private final Handler[] mHandlers = new Handler[PingPong.values().length];
 
     /**
@@ -47,6 +48,7 @@ public class PlayPingPong implements Runnable {
      * HandlerThreads are fully initialized before the ping-pong
      * algorithm begins.
      */
+    // @@ TODO - you fill in here.
     private final CyclicBarrier mBarrier = new CyclicBarrier(PingPong.values().length);
 
     /**
@@ -77,6 +79,7 @@ public class PlayPingPong implements Runnable {
          */
         public PingPongThread(PingPong myType) {
         	super(myType.toString());
+        	// @@ TODO - you fill in here.
          	mMyType = myType;
         }
 
@@ -89,10 +92,12 @@ public class PlayPingPong implements Runnable {
         protected void onLooperPrepared() {
             // Create the Handler that will service this type of
             // Handler, i.e., either PING or PONG.
+        	// @@ TODO - you fill in here.
         	mHandlers[mMyType.ordinal()] = new Handler(this);
         	
             try {
                 // Wait for both Threads to initialize their Handlers.
+            	// @@ TODO - you fill in here.
             	mBarrier.await();                
                 
             } catch (Exception e) {
@@ -137,7 +142,8 @@ public class PlayPingPong implements Runnable {
             	Log.i(TAG, "Thread " + mMyType.toString() + " shutting down");
             	// Shutdown the HandlerThread so the main PingPong
                 // thread can join with it.
-
+            	// @@ TODO - you fill in here.
+            	
             	Handler newTarget = (Handler)reqMsg.obj;
             	if(newTarget != null && newTarget.getLooper().getThread().isAlive())
             		newTarget.getLooper().quit();
