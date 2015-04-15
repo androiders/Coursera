@@ -118,7 +118,6 @@ public class PlayPingPong implements Runnable {
             Message msg = pingHandler.obtainMessage();
             msg.setTarget(pingHandler);
             msg.obj = pongHandler;
-            //pingHandler.sendMessage(msg);
             msg.sendToTarget();
             
         }
