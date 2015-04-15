@@ -5,6 +5,7 @@ import com.mooc.assignment3.EnterUrlDialogFragment.UrlDialogListener;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,11 +25,15 @@ public class MainActivity extends LifecycleLoggingActivity implements UrlDialogL
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		if (savedInstanceState == null) {
+		
+		FragmentManager fm = getFragmentManager();
+		mFragment = (MainFragment) fm.findFragmentById(R.id.container);
+		
+		if(mFragment == null){
 			mFragment = new MainFragment();
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, mFragment).commit();
+			fm.beginTransaction().add(R.id.container, mFragment).commit();
 		}
+		
 	}
 
 	@Override
