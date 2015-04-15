@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Assignment3</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_download">Download image</string>
+    <string name="imageDesc">the image</string>
+    <string name="urlhint">image url</string>
+    <string name="cancel">Cancel</string>
+    <string name="idle">Idle</string>
+    <string name="downloading">Downloading</string>
+    <string name="filtering">Filtering</string>
+    <string name="defaultUrl">http://10.2.2.36/~anfol1/tux.png</string>
+    <string name="cancelling">Cancelling...</string>
+
+</resources>
