@@ -29,7 +29,7 @@ public class EnterUrlDialogFragment extends DialogFragment {
 		 
 		 LayoutInflater inflater = getActivity().getLayoutInflater();
 	     final View root = inflater.inflate(R.layout.urldialog,null);
-		 ((EditText)root.findViewById(R.id.url_text)).setText(R.string.defaultUrl);
+		 ((EditText)root.findViewById(R.id.url_text)).setText(R.string.defaultUrl2);
 	     builder.setView(root)
 		 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			 public void onClick(DialogInterface dialog, int id) {

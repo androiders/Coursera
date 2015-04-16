@@ -12,5 +12,6 @@
     <string name="filtering">Filtering</string>
     <string name="defaultUrl">http://10.2.2.36/~anfol1/tux.png</string>
     <string name="cancelling">Cancelling...</string>
+    <string name="defaultUrl2">http://i.stack.imgur.com/OrOS9.png</string>
 
 </resources>
