@@ -1,21 +1,14 @@
 package com.mooc.assignment3;
 
-import com.mooc.assignment3.EnterUrlDialogFragment.UrlDialogListener;
-
-import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.URLUtil;
 import android.widget.Toast;
-import android.os.Build;
+
+import com.mooc.assignment3.EnterUrlDialogFragment.UrlDialogListener;
 
 public class MainActivity extends LifecycleLoggingActivity implements UrlDialogListener {
 

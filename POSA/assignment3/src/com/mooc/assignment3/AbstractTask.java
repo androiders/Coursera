@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-public class AbstractTask extends AsyncTask<Uri,Integer,Uri> {
+public abstract class AbstractTask extends AsyncTask<Uri,Integer,Uri> {
 
 	
 	public interface TaskCallbacks {
@@ -21,11 +21,6 @@ public class AbstractTask extends AsyncTask<Uri,Integer,Uri> {
 		super();
 		mContext = ctx;
 		mCallbacks = callbacks;
-	}
-
-	@Override
-	protected Uri doInBackground(Uri... params) {
-		return null;
 	}
 
 	protected Context getContext(){

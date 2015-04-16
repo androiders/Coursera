@@ -50,17 +50,20 @@ public class MainFragment extends Fragment implements TaskManager.ImageCallbacks
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_main, container,
 				false);
+		
+		//cache the needed view components
 		progress = (ProgressBar) rootView.findViewById(R.id.progress);
 		statusText = (TextView) rootView.findViewById(R.id.statusText);
 		mImage = (ImageView) rootView.findViewById(R.id.image);
 		mFiltered = (ImageView) rootView.findViewById(R.id.filteredImage);
 		cancel = (Button) rootView.findViewById(R.id.cancelButton);
+		
+		//add clicklistener to cancel button
 		cancel.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				progress.setIndeterminate(true);
-				statusText.setText(R.string.cancelling);
+				updateUiState(R.string.cancelling, false, View.VISIBLE, true);
 				mTaskManager.cancelCurrent(true);
 				
 			}
@@ -172,12 +175,11 @@ public class MainFragment extends Fragment implements TaskManager.ImageCallbacks
 		
 		//start filtering right away
 		mTaskManager.startFilterImage(imagePath);
-		statusText.setText(R.string.filtering);
-		cancel.setEnabled(true);
+		updateUiState(R.string.filtering, true, View.VISIBLE, false);
 	}
 
 	/**
-	 * If user cancells the download we will know it here. 
+	 * If user cancels the download we will know it here. 
 	 */
 	@Override
 	public void downloadCancelled() {
@@ -196,7 +198,7 @@ public class MainFragment extends Fragment implements TaskManager.ImageCallbacks
 
 		//if something went wrong we show a toast and return
 		if(imagePath == null){
-			Utils.showToast(getActivity(), "Unable to decode image!");
+			Utils.showToast(getActivity(), "Unable to filter image!");
 			return;
 		}
 		
