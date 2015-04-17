@@ -12,7 +12,14 @@ public class ImageDownloadTask extends AbstractTask {
 
 	@Override
 	protected Uri doInBackground(Uri... params) {
-		Uri u = Utils.downloadImage(getContext(), params[0]);
+		Uri u = Utils.downloadImage(getContext(), params[0], new ProgressObserver() {
+			
+			@Override
+			public void update(int max, int progress) {
+				double prg = ((double)progress / (double)max) * 100.0;
+				publishProgress((int)prg);
+			}
+		});
 		
 		return u;
 	}

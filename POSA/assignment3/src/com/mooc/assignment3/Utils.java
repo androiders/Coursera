@@ -126,7 +126,7 @@ public class Utils {
      * @return          the absolute path to the downloaded image file on the file system.
      */
     public static Uri downloadImage(Context context,
-                                    Uri url) {
+                                    Uri url, ProgressObserver po) {
     	try {
             if (!isExternalStorageWritable()) {
                 Log.d(TAG,
@@ -136,6 +136,7 @@ public class Utils {
 
             // Input stream.
             InputStream inputStream;
+            InputStream boundsStream;
 
             // Filename that we're downloading (or opening).
             String filename;
@@ -153,21 +154,40 @@ public class Utils {
                 // reference an image.
                 inputStream =
                     (InputStream) new URL(url.toString()).getContent();
+                boundsStream = (InputStream) new URL(url.toString()).getContent();
                 filename = url.toString();
             }
 
+            BitmapFactory.Options opts = new BitmapFactory.Options();
+            opts.inJustDecodeBounds = true;
+            //get size of image
+            BitmapFactory.decodeStream(boundsStream,null,opts);
+            
+            int imageSize = opts.outHeight * opts.outWidth;	
+
+            InputStreamProgressDecorator input = new InputStreamProgressDecorator(inputStream, po, imageSize);
+            
             // Decode the InputStream into a Bitmap image.
+
             Bitmap bitmap =
-                BitmapFactory.decodeStream(inputStream);
+                    BitmapFactory.decodeStream(input);
+
+            //            Bitmap bitmap =
+//                BitmapFactory.decodeStream(inputStream);
 
             // Bail out of we get an invalid bitmap.
             if (bitmap == null)
                 return null;
             else
-                // Create an output file and save the image into it.
-                return Utils.createDirectoryAndSaveFile(context, 
+            {
+            	// Create an output file and save the image into it.
+            	Uri ret = Utils.createDirectoryAndSaveFile(context, 
                                                         bitmap,
                                                         filename);
+            	po.update(imageSize, imageSize);
+
+            	return ret;
+            }
         } catch (Exception e) {
             Log.e(TAG, "Exception while downloading. Returning null.");
             Log.e(TAG, e.toString());

@@ -144,7 +144,7 @@ public class MainFragment extends Fragment implements TaskManager.ImageCallbacks
 			return;
 		}
 	
-		updateUiState(R.string.downloading, true, View.VISIBLE, true);
+		updateUiState(R.string.downloading, true, View.VISIBLE, false);
 		
 		mImage.setImageBitmap(null);
 		mFiltered.setImageBitmap(null);
