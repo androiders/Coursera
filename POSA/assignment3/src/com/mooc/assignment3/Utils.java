@@ -163,12 +163,12 @@ public class Utils {
             //get size of image
             BitmapFactory.decodeStream(boundsStream,null,opts);
             
-            int imageSize = opts.outHeight * opts.outWidth;	
-
+            //this is just a approximation of the max data to read in order to get a nice looking progress bar...
+            int imageSize = opts.outHeight * opts.outWidth / 2;	
+            //input stream decorator to be able to display progress
             InputStreamProgressDecorator input = new InputStreamProgressDecorator(inputStream, po, imageSize);
             
             // Decode the InputStream into a Bitmap image.
-
             Bitmap bitmap =
                     BitmapFactory.decodeStream(input);
 
